@@ -41,11 +41,11 @@
                     Login
                 </span>
 
-                <div class="wrap-input100 validate-input m-b-23" data-validate = "email is reauired">
-                    <span class="label-input100">email</span>
-                    <input id="email"  class="input100 @error('email') is-invalid @enderror" type="email" 
-                    name="email" placeholder="Type your email" required >
-                    @error('email')
+                <div class="wrap-input100 validate-input m-b-23" data-validate = "identify is reauired">
+                    <span class="label-input100">email or mobile</span>
+                    <input id="identify"  class="input100 @error('identify') is-invalid @enderror" type="text" 
+                    name="identify" placeholder="Type your email or mobile " required >
+                    @error('identify')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
