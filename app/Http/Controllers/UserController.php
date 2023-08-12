@@ -29,11 +29,13 @@ class UserController extends Controller
         'name' => ['required', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'password' => ['required', 'string', 'min:8'],
+        'mobile'=>['required', 'min:6'],
       ]);
      $user=User::create([
        
        'name'=> $request->name,
        'email'=>$request->email,
+       'mobile'=>$request->mobile,
        'password'=>Hash::make($request->password),
     
      ]);

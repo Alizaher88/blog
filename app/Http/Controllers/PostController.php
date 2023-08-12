@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-
-
-
+use Illuminate\Support\Facades\Validator;
 class PostController extends Controller
 {
+  
     public function __construct()
     {
         $this->middleware('auth')->except('index','show');
-        $this->middleware('verified');
+        $this->middleware('verified')->except('index','show');
     }
 
     public function index()
@@ -35,22 +35,26 @@ class PostController extends Controller
       return view('posts.create');  
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-      $this->validate($request,[
-        'name'=> 'required',
-        'description'=> 'required',
-        'image'=> 'required|image',
-      ]);
+      
+    //  $rules= $this->getRules();
+    //  $messages=$this->getMessages();
+     $validate=Validator::make($request->all(),$request->rules(),$request->messages());
+     if($validate->fails())
+     {
+  
+      return  redirect()->back()->withErrors($validate);
+     }
+     else
+     {
       $image = $request->image;
       $newimage = time().$image->getClientOriginalName();
-      //dd($newimage);
       $image->move('uploads/posts',$newimage);
       $id = Auth::id();
-      $slug = Str::slug($request->name, '@','en',['@'=>'v']);
+      $slug = Str::slug($request->name);
 
-
-     $post=Post::create([
+      $post=Post::create([
        
        'name'=> $request->name,
        'description'=>$request->description,
@@ -60,7 +64,8 @@ class PostController extends Controller
 
      ]);
      
-     return redirect()->route('posts.index')->with('success','Post created successfully');
+     return redirect()->route('posts.index')->with('success',__('messages.Post created successfully'));
+    }
     }
     public function show($slug)
     {
@@ -76,31 +81,31 @@ class PostController extends Controller
         return view('posts.edit')->with('post', $post);
     }
 
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-      $post=Post::find($id);
-      
-        $this->validate($request,[
-            'name'=> 'required',
-            'description'=> 'required',
-            'image'=> 'image',
-          ]);
-          if($request->has('image')){
-          $image = $request->image;
-      $newImage = time().$image->getClientOriginalName();
-      $image->move('uploads/posts',$newImage);
-      $post->image = 'uploads/posts/'.$newImage;
+        $post=Post::find($id);
+        $validate=Validator::make($request->all(),$request->rules(),$request->messages());
+        if($validate->fails())
+        {
+     
+          return  redirect()->back()->withErrors($validate);
+        }
+        else
+        {
+          if($request->has('image'))
+          {
+            $image = $request->image;
+            $newImage = time().$image->getClientOriginalName();
+            $image->move('uploads/posts',$newImage);
+            $post->image = 'uploads/posts/'.$newImage;
           }
           $post->name = $request->name;
           $post->description = $request->description;
-         // dd($post);
           $post->save();
-          return redirect()->route('posts.index')->with('success','Post updated successfully');
-    }
+          return redirect()->route('posts.index')->with('success',__('messages.Post updated successfully'));
+        }
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         
@@ -123,5 +128,24 @@ class PostController extends Controller
     return redirect()->route('posts.trashed') ;
     }
 
-    
-}
+    // protected function getRules(){
+
+    //   return  $rules=['name'=> 'required|max:100',
+    //   'description'=> 'required',
+    //   'image'=> 'required|image',];
+
+       
+
+
+    // }
+    // protected function getMessages(){
+    //   return $messages=[
+    //     'name.required'=> __('messages.The Name is required'),
+    //     'name.max'=> __('messages.The Name tall max 100 characters'),
+    //     'description.required'=> __('messages.The Description is required'),
+    //     'image.required'=> __('messages.The Image is required'),
+    //     'image.image'=> __('messages.The type should be Image'),
+        
+    //   ];
+    // }
+  }

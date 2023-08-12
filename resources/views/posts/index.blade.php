@@ -12,16 +12,21 @@
 @endif
 
 <div class="container">
-  @auth
-  <a href="{{route('posts.create')}}" class="nav-link btn btn-primary" >
-    <i class="bi bi-bag-plus-fill"> Create</i></a>
-    <a href="{{route('posts.trashed')}}" class="nav-link nav-link btn btn-danger"  >
-      <i class="bi bi-trash-fill ">trashed</i>
-    </a> 
-     
-  @endauth
- 
-<table class="table">
+    @auth
+        <a href="{{route('posts.create')}}" class="nav-link btn btn-primary" >
+        <i class="bi bi-bag-plus-fill">{{ __('indexpost.Create') }} </i></a>
+        <a href="{{route('posts.trashed')}}" class="nav-link nav-link btn btn-danger"  >
+          <i class="bi bi-trash-fill ">{{__('indexpost.trashed')}}</i>
+        </a> 
+      
+    @endauth
+    @if (session()->has('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session()->get('success') }}
+        </div>
+
+    @endif
+  <table class="table"> 
     <thead>
           
       
@@ -29,18 +34,18 @@
         <th scope="col">
 
         </th>
-        <th scope="col">name</th>
-        <th scope="col">description</th>
-        <th scope="col">Name</th>
-        <th scope="col">image</th>
-        <th scope="col">action</th>
+        <th scope="col">{{__('indexpost.name')}}</th>
+        <th scope="col">{{__('indexpost.description')}}</th>
+        <th scope="col">{{__('indexpost.Name')}}</th>
+        <th scope="col">{{__('indexpost.image')}}</th>
+        <th scope="col">{{__('indexpost.action')}}</th>
 
       </tr>
     </thead>
     <tbody>
-@php
-$i=0;    
-@endphp
+      @php
+      $i=0;    
+      @endphp
       @foreach ($post as $item)
       @php
         
@@ -54,7 +59,7 @@ $i=0;
         <td>
           <img src="/{{$item->image}}" alt="{{$item->image}}"
           class="img-tumbnail" width="100" height="100">
-</td>
+        </td>
         <td scope="row">
           @auth
           <button type="button" class="btn btn-secondary"><a href="{{route('posts.edit',$item->id)}}" class="nav-link" ><i class="bi bi-pencil-square"></i>
@@ -77,6 +82,14 @@ $i=0;
       @endforeach
     </tbody>
   </table>
-  {!! $post->links() !!}
+  
+        {{-- {!! $post->links() !!} --}}
+        {{ $post->links('pagination::simple-bootstrap-5') }}
+
+
+
+     
+  </nav>
+ 
 </div>
 @endsection

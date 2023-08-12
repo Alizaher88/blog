@@ -35,12 +35,17 @@
               <input type="text" name="email" class="form-control"   >
             </div>
             <div class="form-group">
+              <label for="exampleFormControlTextarea1">Mobile  </label>
+              <input type="number" name="mobile" class="form-control"   >
+            </div>
+
+            <div class="form-group">
               <label for="exampleFormControlTextarea1">Password  </label>
               <input type="text" name="password" class="form-control"   >
             </div>
             <div class="form-group">
 
-                <button class="btn btn-danger" type="submit">save</button>
+                <button class="btn btn-danger" type="submit">Add</button>
             </div>
 
           </form>

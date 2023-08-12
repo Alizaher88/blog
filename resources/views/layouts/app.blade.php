@@ -41,24 +41,33 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                            <li>
+                                <a rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}" class="nav-link">
+                                    {{ $properties['native'] }}
+                                </a>
+                            </li>
+                        @endforeach
+                    
+                    
                      <li>
                        
-                        <a href="{{route('posts.index')}}" class="nav-link" >Posts</a>
+                        <a href="{{route('posts.index')}}" class="nav-link" >{{__('layout.Posts')}}</a>
                        
                      </li>
                      <li>
                         @auth
-                        <a href="{{url('posts')}}" class="nav-link" >Profile</a>
+                        <a href="{{url('posts')}}" class="nav-link" >{{__('layout.Profile')}}</a>
                          @endauth
                      </li>
                      <li>
                         @auth
-                        <a href="{{route('users.index')}}" class="nav-link" >Users</a>
+                        <a href="{{route('users.index')}}" class="nav-link" >{{__('layout.Users')}}</a>
                          @endauth
                      </li>
                      <li>
                         @auth
-                        <a href="{{url('posts')}}" class="nav-link" >Tags</a>
+                        <a href="{{url('posts')}}" class="nav-link" >{{__('layout.Tags')}}</a>
                          @endauth
                      </li>
                     </ul>
@@ -71,13 +80,13 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('layout.Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('layout.Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -90,7 +99,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('layout.Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
